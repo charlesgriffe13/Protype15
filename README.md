@@ -1,6 +1,6 @@
 #  VIDEO FINDER - ReadMe.md
 
-![](Ressources\carte euristique.png)
+![](Ressources\carte_euristique.png)
 
 ##  Introduction
 
