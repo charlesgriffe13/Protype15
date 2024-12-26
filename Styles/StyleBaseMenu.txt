@@ -1,0 +1,34 @@
+QMenuBar {/* Position de base*/
+  position: absolute;
+  background-color: #292929;
+  padding: 15px;
+  border: 1px solid #19232D;
+  color: #a6a8ab;
+  selection-background-color: #1A72BB;
+}
+
+QMenuBar::item:selected {/* survol souris*/
+  padding: 0px;
+  background: transparent;
+  border: 0px solid #455364;
+  /*background-color: #a6a8ab;*/
+}
+
+QMenu {/* sous menu*/
+  border: 0px solid #455364;
+  color: #a6a8ab;
+  margin: 0px;
+  background-color: #292929;
+  selection-background-color: #1A72BB;
+}
+
+QMenu::item {/* sous menu position du texte*/
+  margin: 8px;
+  color: #a6a8ab;
+}
+
+
+QMenu::item:selected {
+  color: green;
+  /*background-color: #F05A24 !important;
+  background: transparent;*/

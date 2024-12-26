@@ -1,0 +1,41 @@
+QMainWindow {
+	background-color: #333333;
+}
+
+QTextEdit {
+        background-color: #333333; 
+        border-radius: 6px; 
+        color: white
+    }
+    
+    QScrollBar:vertical {
+        background-color: transparent;
+        width: 10px;
+        margin: 20px 0 20px 0;
+    }
+
+    QScrollBar::handle:vertical {
+        background-color: #60798b;
+        min-height: 30px;
+        border-radius: 4px
+    }
+
+    QScrollBar::add-line:vertical {
+        border: none;
+        background: none;
+    }
+
+    QScrollBar::sub-line:vertical {
+        border: none;
+        background: none;
+    }
+    
+    QScrollBar::add-page:vertical {
+        border: none;
+        background: none;
+    }
+
+    QScrollBar::sub-page:vertical {
+        border: none;
+        background: none;
+    }

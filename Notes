@@ -1,0 +1,34 @@
+ligne 2533 : récupérer la racine dans mainWindow -> OK
+ligne 3385 : Idem -> OK
+ligne 3675 : Idem -> OK
+ligne 4249 : Idem -> OK
+Paragraph -> clic lien : bouton modif -> OK (btnModif = bouton corbeille)
+Paragraph -> clic lien : pas de positionnement du timeCode -> Ok
+Paragraph -> clic lien : pas de retour à la vidéo parente -> Ok
+DataBase -> VideoFileTab : ajouter champ bibliothèque -> Ok
+DataBase / Class FormParameters : Gestion des bibliothèques -> Ok
+Bug (cv2.error) -> dans gridWindow : bouton 1/2 -> Ok
+Bouton loupe + lneSearch -> clique sur une des vidéos sélectionnées -> formScreen1 -> btn actGridWindow
+        -> btnAllItems -> pas d'effet -> Ok
+btnAllItems -> formScreen1 -> btn actGridWindow -> pas de rafraichissement de gridWindow -> Ok
+Ajout nouvelle video    -> ordre dans le classeur par défaut incohérent -> Ok
+                        -> le internalPath n'est pas chargé lors dans GridWindow -> Ok
+FormScreen1 -> le slider (time code) ne revient pas à zéro quand on actionne le bouton |<<| -> Ok
+FormListVideo -> Onglet gestion des statuts pas cohérent dans ce module + mise à jour du statut -> Ok
+Action changement de bibliothèque -> pas de mise à jour de GridWindow (all items, etc.)
+FormListVideo -> les onglets ne fonctionnent  -> Ok
+CadreListStatut -> Pas de mise à jour en cas de création, modification ou suppression dans la table
+CadreListStatut -> Pas de stretching horizontal -> Ok
+FormListVideo -> confusion dans les videoID, vieoCour, etc... -> Ok
+FormScreen1 -> stabilité des picots ?? -> Ok
+GridWindow -> Quand on retourne sur GridWindow, la dernière sélection n'est pas respectée -> Ok
+FormScreen1 -> quand on passe en mode Etude -> ajouter l'icone player -> Ok
+FormScreen1 -> quand on supprime un onglet en mode étude, l'icone player de la vidéo correspondant doit être enlevé. -> Ok
+FormGererNote -> en création, bug sur la génération des tags par Ctrl T
+FormScreen1 -> même en fermant l'application la vidéo continue à se jouer
+FormScreen1 -> le volume du son est initialisé à 0 -> Ok
+FormScreen1 -> le "aller à..." ne saute pas au timeCode correspondant -> Ok
+FormScreen1 -> le pointeur sur la dernière marque de note sur le Slider ne fonctionne pas si on la dépasse légèrement -> Ok
+FormGererNote -> la vidéo ne peut pas être pilotée -> Ok
+
+

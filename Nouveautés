@@ -1,0 +1,48 @@
+LabelIndex
+        Neutralisation du clic cimple
+        DoubleClic -> mode étude
+        menu contextuel -> mode étude
+                        -> mode edition
+
+***********************************************************************************************************************
+Vidéo en mode étude
+        A partir de GridWindow  -> menu contextuel -> mode étude -> le symbole lecture apparait sur la vignette
+                                -> dans la zone toolBar cliquer sur le bouton mode étude
+                                -> les vidéos apparaissent dans des onglets
+        Dans le mode étude      -> cliquer sur la croix de l'onglet pour fermer la vidéo correspondante
+                                -> dans la zone toolBar cliquer sur liste des vidéos pour ajouter un nouvek onglet
+
+***********************************************************************************************************************
+Vidéo en mode édition
+        Sur la vignette         -> Menu contextuel -> module liste des vidéos
+
+***********************************************************************************************************************
+Vidéo en mode édition
+
+        Il y a 2 données modifiables : classeur et statut   -> pour enregistrer les données
+                                                            -> onglet Info générales -> bouton sauver
+
+                                                            -> pour gérer les tables statut et classeurs
+                                                            - > bouton engrenage à coté des listes concernées
+
+***********************************************************************************************************************
+Vidéo en mode étude : création de note ou de bloc (Titre, image, texte)
+
+        Création à partir du player :
+            -> Bloquer la marque puis bouton "Créer Note"
+            -> Fenêtre de création et de modification des notes
+            -> 3 onglets : titre, image, note
+            -> sur le bouton sauver une coche rouge apparait si la note concernée est bien enregistrée
+            -> pour les notes et les titres, saisie de tags :
+                    -> sélectionner le ou les mots à taguer : Ctrl+T ou bonton "tag"
+                    -> mise à jour du module paragraph à la fermeture de la fenêtre
+
+        Modification à partir du module paragraph :
+            -> Cliquer sur le bouton modif de la note à éditer
+            -> Si aucun bouton ne figure sur la note ==> la note fait partie d'un bloc
+            -> La fenêtre s'ouvre et active les onglets en fonction de ou des notes d'un éventuel bloc
+
+***********************************************************************************************************************
+Ajout de lien vers un site internet
+        Ajout d'un nouveau lien Web à partir du module Player
+        Modification à partir du bouton modif dans le paragraph (sauf en cas de bloc)
