@@ -554,8 +554,8 @@ class MainParagraph(QMainWindow, Ui_mainParagraph):
         self.objNote.populateParagraph(formScreen1.videoID)
 
     def evt_btnMarquePage_clicked(self):
-        pass
+        print('ok3')
 
     def evt_btnRetour_clicked(self):
-        pass
+        print('ok1')
 

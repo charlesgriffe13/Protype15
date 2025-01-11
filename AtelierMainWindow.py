@@ -123,7 +123,7 @@ class MainWindow(QMainWindow):
             # Afficher la liste des tables
             for table in tables:
                 pass
-                # print(table)
+
         #  Initialisation du nombre de colonnes de la GridVignette
         self.lngCourGlobal = ''
         query = QSqlQuery()
@@ -2114,7 +2114,6 @@ class SelectZoneDroit(QMainWindow):
     #
     # def mouseMoveEvent(self, event: QMouseEvent):
     #     if self._dragging == True:
-    #         print(self)
     #         new_pos = self.mapToParent(event.pos() - self._drag_offset)
     #         self.move(new_pos)
     #         event.accept()
@@ -2135,9 +2134,7 @@ class SelectZoneDroit(QMainWindow):
         # if self == object:
         # if event.type() == QEvent.MouseButtonPress:
         #     self._dragging = True
-        #     print(object.index)
         # if event.type() == QEvent.Enter:
-        #     print(object, self)
         #     return True
         # elif event.type() == QEvent.MouseButtonPress and event.buttons() == Qt.LeftButton:
         #     self._dragging = True
@@ -2168,8 +2165,8 @@ class SelectZoneDroit(QMainWindow):
         self.onResize()
 
     def populateLstVideoSelect(self):
-        self.lstVideoSelect = []
 
+        self.lstVideoSelect = []
         if self.parent.selectZoneGauche.lblSavedSearch.boolSelect: #  Filtre du SavedSearch
             self.parent.selectZoneGauche.lblSavedSearch.boolSelect = False
             self.parent.selectZoneGauche.lblSavedSearch.setStyleSheet('QPushButton {background-color: transparent; '
@@ -2244,11 +2241,13 @@ class SelectZoneDroit(QMainWindow):
                 query.exec(auxRequete)
                 while query.next():
                     self.lstVideoSelect.append(query.value('cle'))
+
             if auxLeftTop != '' and auxDossier != '':
                 query = QSqlQuery()
                 query.exec(auxRequete)
                 while query.next():
                     self.lstVideoSelect.append(query.value('cle'))
+
         self.parent.selectZoneGauche.setCursor(Qt.WaitCursor)
         self.initUI()
         self.parent.selectZoneGauche.setCursor(Qt.ArrowCursor)
@@ -2453,7 +2452,11 @@ class SelectZoneDroit(QMainWindow):
         v = cv2.VideoCapture(video)
         fps = v.get(cv2.CAP_PROP_FPS)
         frame_count = int(v.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps
+        duration = 1
+        try:
+            duration = frame_count / fps
+        except:
+            duration = 1
 
         v.release()
         heureTxt = '00'

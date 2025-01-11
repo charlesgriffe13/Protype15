@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 # from AtelierDragDrop1 import WidgetManager
 import cv2
-import cv2
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -262,6 +262,8 @@ class LabelIndex(QLabel):
                 self.lngCourGlobal = 'en'
         #  recherche des coordonnées de la fenêtre principale de l'application
         self.find_root_widget()
+        videoAux = VideoFileRecord(self.index)
+        self.deleted = videoAux.deleted
 
     def find_root_widget(self):
         for item in QApplication.topLevelWidgets():
@@ -279,13 +281,12 @@ class LabelIndex(QLabel):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
-            # bouton = WidgetManager().get_widget("lblFantome")
-            # if bouton:
-            #     print(bouton.text())
             menu = QMenu()
             menu.setStyleSheet('background-color: #888; border: 1px solid #aaa')
             menu.addAction(QIcon('ressources/ciseaux.png'), 'Couper', lambda: self.menuCouperVignette(self.index))
-            menu.addAction(QIcon('ressources/copier.png'), 'Copier', lambda: self.menuCopierVignette(self.index))
+            if self.deleted != 1: # cas d'une vidéo dans la corbielle, la dupliquer n' pas de sens
+                menu.addAction(QIcon('ressources/copier.png'), 'Copier', lambda: self.menuCopierVignette(self.index))
+
             menu.addAction(QIcon('ressources/corbeille1.png'), 'Corbeille',
                            lambda: self.menuCorbeilleVignette(self.index))
             menu.addSeparator()
@@ -323,10 +324,11 @@ class LabelIndex(QLabel):
         self.boolModeCopier = True
         self.boolModeOnglet = False
         query = QSqlQuery()
-        tplChamps = ('deleted', 'videoPaste')
+        tplChamps = ('flagCut', 'videoPaste')
         tplData = (False, cleVideo)
         bOk = query.exec(f'UPDATE parametersTab SET {tplChamps} = {tplData} WHERE cle = 1')
         self.changeCursor()
+        self.setVisible(False)
 
     def menuCorbeilleVignette(self, cleVideo):
         query = QSqlQuery()
@@ -770,7 +772,7 @@ class VideoFileRecord:
                 self.lngCourGlobal = 'fr'
             if aux == 'Anglais':
                 self.lngCourGlobal = 'en'
-
+        self.videoName = ''
         if query.next():
             self.cleClasseur = query.value('cleClasseur')
             self.ordreClasseur = query.value('ordreClasseur')
@@ -1337,7 +1339,6 @@ class FormBlockNote(MainWindowCustom):
     def __init__(self, parent, videoPath, videoID, marqueCour, boolCreer):
         super().__init__()
         self.setGeometry(100, 100, 1210, 768)
-
         self.setStyleSheet('background-color: #262626')
         # ***** ARGUMENTS  ***************
         self.parent = parent
@@ -2126,7 +2127,7 @@ class FormBlockNote(MainWindowCustom):
                     query.exec(f'INSERT INTO linkTab {tplChamps} VALUES {tplData}')
         else:
             if self.btnValideNote.boolON:
-                #  Suppression des entrées dans linkTab correspondant àla note courante
+                #  Suppression des entrées dans linkTab correspondant à la note courante
                 query = QSqlQuery()
                 query.exec(f'DELETE FROM linkTab WHERE cleVideo={self.videoID} AND timeCode={self.marqueCour}')
                 #  enregistrement du texte de la note
@@ -2196,10 +2197,6 @@ class FormBlockNote(MainWindowCustom):
                 query = QSqlQuery()
                 query.exec(f'DELETE FROM paragraph WHERE cle={self.cleSnapShotCour}')
 
-        # en cas de suppression totale supprimer les tags internes
-        # query = QSqlQuery()
-        # query.exec(f'DELETE FROM tagTab WHERE cleVideo={self.videoID} AND timeCode={self.marqueCour}')
-        #
         try:  # cas de l'éditon de la note à partir du bouton Editer de FormScreen1
             mainXX = self.parent.mainWin.tabObjetScreen.docParagraph.widget()
             mainXX.objNote.populateParagraph(self.videoID)
@@ -2246,16 +2243,10 @@ class FormBlockNote(MainWindowCustom):
             self.dialog.close()
             self.listTpl.append((lien, address))
         else:
+            pass
             format = QTextCharFormat()
             format.setFontWeight(QFont.Normal)
-            format.setForeground(QBrush(QColor("#ffffff")))
-            format.setFontUnderline(False)
-            cursor.mergeCharFormat(format)
             self.textEditNote.mergeCurrentCharFormat(format)
-            cursor.clearSelection()
-            self.textEditNote.setTextCursor(cursor)
-            self.dialog.close()
-            return
 
     def drawPastille(self, radius, color):
         if color == '':
@@ -2497,7 +2488,6 @@ class DialogDossier(QDialog):
                     cleMax = query.value('cleMax') + 1
             except:
                 pass
-
             tplData = (cleMax, self.cleDossierCour, self.lneNom.text())
             tplChamps = ('cle', 'parent_id', 'data')
             query1 = QSqlQuery()
@@ -2586,7 +2576,8 @@ class MainWindowDossier(QMainWindow):
         self.parent = parent
         self.cle = 0
         self.listWidget = []
-        self.cleDrag = 0
+        self.cleDrag = -1
+        self.cleDossierSelect = 1
         self.initUI()
 
     def initUI(self):
@@ -2598,7 +2589,7 @@ class MainWindowDossier(QMainWindow):
         self.grpTree.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.grpTree.setStyleSheet('background-color: #222')
         self.grpTree.setFixedSize(500, 600)
-        self.grpTree.move(0, 0)
+        self.move(0, 0)
         # label qui apparaitra sur SelectZoneGauche pour un déplacement de la vidéo vers un
         # autre dossier. Il est utilisé par la classe LabelIndex
         self.grpTree.lblFantome = LblFantome(self.grpTree)
@@ -2606,23 +2597,6 @@ class MainWindowDossier(QMainWindow):
         self.grpTree.lblFantome.setText("Cliquer sur la croix pour annuler.")
         self.grpTree.lblFantome.setVisible(False)
 
-        #  Ajouter le widget dans le WidgetManager
-
-        # manager = WidgetManager()  # Obtenir une instance unique de WidgetManager
-        # manager.add_widget("lblFantome", self.grpTree.lblFantome)
-        # manager.add_widget("grpTree", self.grpTree)
-
-        # self.grpTree.lblFantome.acceptDrops()
-        # self.grpTree.lblFantome.setCursor(Qt.PointingHandCursor)
-        #  Ajouter le bouton annuler
-        # btnAnnulFantome = QPushButton(self.grpTree.lblFantome)
-        # btnAnnulFantome.setFixedSize(30, 30)
-        # btnAnnulFantome.move(265, 5)
-        # btnAnnulFantome.setIcon(QIcon('ressources/croixFrantomeRouge.png'))
-        # btnAnnulFantome.setStyleSheet('QPushButton {background-color: #666; border: none} '
-        #                               'QPushButton:hover {background-color: #aaa}')
-        # btnAnnulFantome.clicked.connect(self.evt_btnAnnulFantome_clicked)
-        #  Menu contextuel
         self.grpTree.setContextMenuPolicy(Qt.CustomContextMenu)
         self.grpTree.customContextMenuRequested.connect(self.showMenuContextuel0)
 
@@ -2641,9 +2615,8 @@ class MainWindowDossier(QMainWindow):
         self.scrollArea.setStyleSheet(style)
         self.setStyleSheet('background-color: #222222; border: 0px')
 
-    def enterEvent(self, event):
-
-        query =QSqlQuery()
+    def afficherLblFantome(self, boolDrag):
+        query = QSqlQuery()
         query.exec_(f'SELECT videoPaste, flagCut FROM parametersTab WHERE cle=1')
         if query.next():
             if query.value('videoPaste') > 0:
@@ -2654,14 +2627,17 @@ class MainWindowDossier(QMainWindow):
                     self.grpTree.lblFantome.move(10, 5)
                     self.grpTree.lblFantome.setText("Cliquer sur la croix pour annuler.")
                     self.grpTree.lblFantome.setVisible(True)
-            else:
+            if boolDrag:
                 try:
-                    self.grpTree.lblFantome.setVisible(False)
+                    self.grpTree.lblFantome.setVisible(True)
                 except:
                     self.grpTree.lblFantome = LblFantome(self.grpTree)
                     self.grpTree.lblFantome.move(10, 5)
                     self.grpTree.lblFantome.setText("Cliquer sur la croix pour annuler.")
-                    self.grpTree.lblFantome.setVisible(False)
+                    self.grpTree.lblFantome.setVisible(True)
+
+    def enterEvent(self, event):
+        self.afficherLblFantome(False)
 
 
     def evt_btnAnnulFantome_clicked(self):
@@ -2676,7 +2652,14 @@ class MainWindowDossier(QMainWindow):
         pass
 
     def refreshTree(self):
-        self.grpTree.lblFantome.setVisible(True)
+        try:
+            self.grpTree.lblFantome.setVisible(True)
+        except:
+            self.grpTree.lblFantome = LblFantome(self.grpTree)
+            self.grpTree.lblFantome.move(10, 5)
+            self.grpTree.lblFantome.setText("Cliquer sur la croix pour annuler.")
+            self.grpTree.lblFantome.setVisible(True)
+
         self.grpTree.close()
         self.grpTree.lblFantome.setVisible(True)
         # self.scrollArea
@@ -2756,7 +2739,6 @@ class MainWindowDossier(QMainWindow):
         self.parent.dossierSelectCour = -1
 
     def displayTree(self, root, indent=''):
-
         if True:  # os.path.isdir(root) -> cas répertoires + fichiers
             lblNode = DraggableWidget1(self.grpTree, self, root)
             # lblNode.installEventFilter(lblNode)
@@ -2764,10 +2746,10 @@ class MainWindowDossier(QMainWindow):
 
             lblNode.contenant = self
             lblNode.move(len(indent) * 12 + 10, self.indice * 40 + 50)
-
+            if lblNode.node.cle == self.cleDossierSelect:
+                lblNode.setStyleSheet('background-color: #466c79; color: white')
             lblNode.setFixedWidth(lblNode.width() - lblNode.x())
             lblNode.posInit = (len(indent) * 12 + 10, self.indice * 30)
-
 
             items = root.lstChildren
             if len(items) == 0:
@@ -2797,14 +2779,16 @@ class DraggableWidget1(QLabel):
         self.setFixedSize(500, 30)
         self.setApparence(False)
         self._dragging = False
+        self._drag_offset = QPoint()
+        self.dragStartPosition = QPoint()
         self.parent = parent
         self.contenant = contenant
         self.node = node
         self.selectVert = False
         self.listSupprDossier = []
-        self.cleDrag = 0
         self.cleCreate = 0
         self.flagCut = None
+        self.posClick = 0
 
         #  Initialisation de la langue
         query = QSqlQuery()
@@ -2832,21 +2816,30 @@ class DraggableWidget1(QLabel):
         self.btDeveloppe.move(0, 10)
         self.btDeveloppe.clicked.connect(self.evt_btDeveloppe_clicked)
         #  Data du treeNode
-        titreLabel = QLabel(self)
-        titreLabel.setStyleSheet('background-color: transparent; color: white')
-        titreLabel.setText(node.data)
-        titreLabel.move(65, 7)
+        self.titreLabel = QLabel(self)
+
+        self.titreLabel.setFixedSize(230, 18)
+
+        self.titreLabel.setText(node.data)
+        self.titreLabel.move(65, 7)
 
         #  Rendre le widget glissable
         self.setAcceptDrops(True)
 
     def setApparence(self, boolCadre):
         if boolCadre:
-            self.setStyleSheet('QLabel {background-color: #222; border: 1px solid red; color: gray} '
+            self.setStyleSheet('QLabel {background-color: #222; border: 1px solid red; color: white} '
                                'QLabel::hover {background-color: #444}')
         else:
-            self.setStyleSheet('QLabel {background-color: #222; border: 0px solid red; color: gray} '
+            self.setStyleSheet('QLabel {background-color: #222; border: 0px solid red; color: white} '
                                'QLabel::hover {background-color: #444}')
+
+    def changeCursor(self):
+        pixmap = QPixmap("ressources/dragAndDrop1.png")
+        # Créer un curseur personnalisé
+        custom_cursor = QCursor(pixmap, hotX=0, hotY=0)  # hotX et hotY définissent le point actif du curseur
+        # Appliquer le curseur au widget (ou à la fenêtre)
+        QApplication.setOverrideCursor(custom_cursor)
 
     def evt_btDeveloppe_clicked(self):
         #  Swap développé / non développé
@@ -2877,6 +2870,7 @@ class DraggableWidget1(QLabel):
             videoFullPath = event.mimeData().urls()[0].toLocalFile()
             if os.path.isdir(videoFullPath):
                 self.importArbre(videoFullPath, self.node.cle)
+                return
                 event.accept()
             videoName = os.path.splitext(os.path.basename(videoFullPath))[0] + \
                         os.path.splitext(os.path.basename(videoFullPath))[1]
@@ -2921,7 +2915,10 @@ class DraggableWidget1(QLabel):
                 v = cv2.VideoCapture(videoFullPath)
                 fps = v.get(cv2.CAP_PROP_FPS)
                 frame_count = int(v.get(cv2.CAP_PROP_FRAME_COUNT))
-                duration = int(frame_count / fps)
+                try:
+                    duration = int(frame_count / fps)
+                except:
+                    duration = 1
                 tplChamps = ('videoName', 'videoFullPath', 'cleClasseur', 'dateLastView', 'statut', 'favori',
                              'deleted', 'cle', 'dateCreation', 'duration', 'marquePage')
                 tplData = (videoName, videoFullPath, cleClasseur, dateLastView, statut, favori, False, maxCle,
@@ -2940,43 +2937,6 @@ class DraggableWidget1(QLabel):
 
         self.contenant.parent.selectZoneDroit.populateLstVideoSelect()
 
-    # def eventFilter(self, object, event):
-    #     if object == self:
-    #         if (event.type() == QEvent.MouseButtonPress and event.buttons() == Qt.RightButton):
-    #             self.cleCreate = object.node.cle
-    #             menu = QMenu()
-    #             menu.setStyleSheet('background-color: #444; border: 1px solid #aaaaaa; color: #aaa')
-    #             menu.addAction(self._trad('Créer nouveau dossier', self.lngCourGlobal),
-    #                            lambda:  self.createSousDossier(self.cleCreate))
-    #             if object.node.parent_id != -1:
-    #                 # menu.addAction('Supprimer  dossier', lambda: self.supprSousDossier(self.cleCreate))
-    #                 menu.addAction(self._trad('Supprimer dossier', self.lngCourGlobal),
-    #                               lambda: self.supprSousDossier(self.cleCreate))
-    #                 menu.addAction(self._trad('Renommer dossier', self.lngCourGlobal), lambda: self.renommerDossier(self.cleCreate))
-    #                 menu.addAction(self._trad('Importer un dossier', self.lngCourGlobal),  lambda:  self.importerDossier(self.cleCreate))
-    #                 menu.addAction(self._trad('Déplacer un dossier', self.lngCourGlobal),
-    #                                lambda: self.deplacerDossier(self.cleCreate))
-    #                 menu.addSeparator()
-    #                 menu.addAction(self._trad('Importer une vidéo', self.lngCourGlobal), lambda: self.importerVideo(self.cleCreate))
-    #                 menu.addSeparator()
-    #                 menu.addAction(self._trad('Annuler', self.lngCourGlobal), menu.close)
-    #             if menu.exec_(event.globalPos()):
-    #                 return True
-    #         if event.type() == QEvent.Enter:
-    #             self.cleCreate = object.node.cle
-    #             if event.mimeData().hasText():
-    #                 event.accept()
-    #             else:
-    #                 event.ignore()
-            # cleDrag = 0
-            # if (event.type() == QEvent.MouseButtonPress and event.buttons() == Qt.LeftButton):
-            #     self._dragging = True
-            #     return True
-            # if event.type() == QEvent.DragMove and self._dragging:
-            #     return True
-
-        # return super().eventFilter(object, event)
-
     def _trad(self, mot, langue):
         query = QSqlQuery()
         query.exec(f'SELECT * FROM langueTab WHERE fr="{mot}"')
@@ -2984,9 +2944,31 @@ class DraggableWidget1(QLabel):
             return query.value(langue)
 
     def deplacerDossier(self, cleDossierDep):
-        self._dragging = False
+        self.contenant.afficherLblFantome(True)
+        self.changeCursor()
+        self._dragging = True
         self._drag_offset = QPoint()
-        #  un click souris déclenche l'évènement mousePressEvent ci_dessous
+        self.contenant.cleDrag = cleDossierDep
+        return
+        query = QSqlQuery()
+        query.exec_(f'SELECT videoPaste, flagCut FROM parametersTab WHERE cle=1')
+        if query.next():
+            if query.value('videoPaste') > 0:
+                try:
+                    self.grpTree.lblFantome.setVisible(True)
+                except:
+                    self.grpTree.lblFantome = LblFantome(self.grpTree)
+                    self.grpTree.lblFantome.move(10, 5)
+                    self.grpTree.lblFantome.setText("Cliquer sur la croix pour annuler.")
+                    self.grpTree.lblFantome.setVisible(True)
+            else:
+                try:
+                    self.grpTree.lblFantome.setVisible(False)
+                except:
+                    self.grpTree.lblFantome = LblFantome(self.grpTree)
+                    self.grpTree.lblFantome.move(10, 5)
+                    self.grpTree.lblFantome.setText("Cliquer sur la croix pour annuler.")
+                    self.grpTree.lblFantome.setVisible(False)
 
     def flagPasteEtat(self):
         # récupération de la valeur booléenne de flagCut
@@ -2998,21 +2980,25 @@ class DraggableWidget1(QLabel):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            #  savoir s'il s'agit d'un déplacement d'une vidéo vers le dossier concerné
+            self.contenant.cleDossierSelect = self.node.cle
+            # if self.node.cle == self.contenant.cleDossierSelect:
+            #     self.contenant.setStyleSheet('background-color: orange; color: white')
+            self.contenant.setStyleSheet('QLabel {background-color: #222; border: 0px solid red; color: white}')
+            self.evt_btnSelect_clicked()
+            self.posClick = (self.mapTo(self.parentWidget(), event.pos())).y()
             self.restoreCursor()
             query =  QSqlQuery()
-
             query.exec_(f'SELECT flagCut, videoPaste FROM parametersTab WHERE cle = 1')
             if query.next():
-                if query.value('videoPaste') > 0:
-                    cleVideo = cleVideo = query.value('videoPaste')
+                if query.value('videoPaste') > 0: #  Transfert d'une vidéo de la SelectZoneGauche vers un autre dossier
+                    cleVideo = query.value('videoPaste')
                     if query.value('flagCut'):  #  Couper
-                        # #  Mise à jour de la vidéo dans le nouveau dossierr
+                        # #  Mise à jour de la vidéo dans le nouveau dossier
                         query1 = QSqlQuery()
-                        tplChamps = ('cleClasseur')
+                        tplChamps = ('cleClasseur', 'deleted')
                         cleVideo = query.value('videoPaste')
                         cleDossier = self.node.cle
-                        tplData = (cleDossier)
+                        tplData = (cleDossier, False)
                         query.exec_(f'UPDATE videoFileTab set {tplChamps} = {tplData} WHERE cle = {cleVideo}')
                         self.contenant.refreshTree()
                         #  Remettre le flagCut de parametersTab
@@ -3024,7 +3010,7 @@ class DraggableWidget1(QLabel):
                         #  Recherche de l'index suivant
                         cleMax = 1
                         query = QSqlQuery()
-                        query.exec(f'SELECT MAX(cle) AS cleMax FROM biblioTreeTab')
+                        query.exec(f'SELECT MAX(cle) AS cleMax FROM videoFileTab')
                         try:
                             if query.next():
                                 cleMax = query.value('cleMax') + 1
@@ -3038,29 +3024,47 @@ class DraggableWidget1(QLabel):
                                    videoAux.statut, videoAux.Favori, False, cleMax,videoAux.dateCreation,
                                    videoAux.duration, 0)
                         query = QSqlQuery()
-                        query.exec(f'INSERT INTO videoFileTab {tplChamps} VALUES {tplData}')
+                        bOk = query.exec(f'INSERT INTO videoFileTab {tplChamps} VALUES {tplData}')
                         self.contenant.refreshTree()
                         #  Remettre le flagCut de parametersTab
                         query1 = QSqlQuery()
                         tplChamps = ('flagCut', 'videoPaste')
                         tplData = (False, -1)
-                        query.exec_(f'UPDATE parametersTab set {tplChamps} = {tplData} WHERE cle = 1')
+                        query1.exec_(f'UPDATE parametersTab set {tplChamps} = {tplData} WHERE cle = 1')
+                else: #  Cas du déplacement d'un dossier dans l'arborescence
+                    self._dragging = False
+                    query = QSqlQuery()
+                    tplChamps = ('parent_id')
+                    tplData = (self.node.cle)
+                    bOk = query.exec_(f'UPDATE biblioTreeTab SET {tplChamps} = {tplData} WHERE cle = {self.contenant.cleDrag}')
+                    self.contenant.refreshTree()
 
-    # def dropEvent(self, event: QDropEvent):# Cas d'un drag and drop d'un fichier ou d'un dossier
-    #     print(2986)
-    #     mime_data: QMimeData = event.mimeData()
-    #     if mime_data.hasUrls():
-    #         for url in mime_data.urls():
-    #             file_path = url.toLocalFile()
-    #             self.list_widget.addItem(file_path)
-    #
-    #         event.acceptProposedAction()
+        if (event.type() == QEvent.MouseButtonPress and event.buttons() == Qt.RightButton):
+            menu = QMenu()
+            self.cleCreate = self.node.cle 
+            menu.setStyleSheet('background-color: #888; border: 1px solid #aaaaaa')
+            menu.addAction(self._trad('Créer nouveau dossier', self.lngCourGlobal),
+                           lambda:  self.createSousDossier(self.cleCreate))
+            if self.node.parent_id != -1:
+                menu.addAction(self._trad('Supprimer dossier', self.lngCourGlobal),
+                              lambda: self.supprSousDossier(self.cleCreate))
+                menu.addAction(self._trad('Renommer dossier', self.lngCourGlobal), lambda: self.renommerDossier(self.cleCreate))
+                menu.addAction(self._trad('Importer un dossier', self.lngCourGlobal),  lambda:  self.importerDossier(self.cleCreate))
+                menu.addAction(self._trad('Déplacer un dossier', self.lngCourGlobal),
+                               lambda: self.deplacerDossier(self.cleCreate))
+                menu.addSeparator()
+                menu.addAction(self._trad('Importer une vidéo', self.lngCourGlobal), lambda: self.importerVideo(self.cleCreate))
+            if menu.exec_(event.globalPos()):
+                pass
+                return
+        cleDrag = 0
 
-    def mouseMoveEvent(self, event: QMouseEvent):
+
+    def mouseMoveEvent(self, event):
         if self._dragging == True:
-            new_pos = self.mapToParent(event.pos() - self._drag_offset)
-            self.move(new_pos)
-            self.contenant.dragCour = self
+            # new_pos = self.mapToParent(event.pos() - self._drag_offset)
+            # self.move(new_pos)
+            # self.contenant.dragCour = self
             # self.setApparence(True)
             event.accept()
 
@@ -3069,74 +3073,33 @@ class DraggableWidget1(QLabel):
 
     def mouseReleaseEvent(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
+            # self.evt_btnSelect_clicked()
             self.restoreCursor()
             if self.flagPasteEtat():
-                query = QSqlQuery()
-                query.exec(f'SELECT videoPaste FROM parametersTab WHERE cle = 1')
-                if query.next():
-                    pass
+                pass
             else:
-                self._dragging = False
-                indexDropIn = round((self.pos().y() - 50) / 40) + 1
+                pass
+                indexDropIn = round((self.posClick - 50) / 40) + 1
                 indexDrag = self.node.cle
                 self.setApparence(False)
                 #  mise à jour du nouveau parent du dossier déplacé
                 if indexDropIn != indexDrag:
+                    #  Définir si c'est un copier ou couper
                     query = QSqlQuery()
-                    tplChamps = ('parent_id')
-                    tplData = (indexDropIn)
-                    query.exec(f'UPDATE biblioTreeTab SET {tplChamps} = {tplData} WHERE cle = {indexDrag}')
-                    self.contenant.refreshTree()
+                    query.exec_(f'SELECT flagCut FROM parametersTab')
+                    if query.next():
+                        boolCouper = query.value('flagCut')
+                    if boolCouper:
+                        query = QSqlQuery()
+                        tplChamps = ('parent_id')
+                        tplData = (indexDropIn)
+                        query.exec(f'UPDATE biblioTreeTab SET {tplChamps} = {tplData} WHERE cle = {indexDrag}')
+                        self.contenant.refreshTree()
+                    else:
+                        pass
+                        self.contenant.refreshTree()
                 else:
                     self.evt_btnSelect_clicked()
-
-    #  Le fichier vidéo est glissé dans l'application
-    # def dragEnterEvent(self, event):
-    #     print('ok')
-    #     if event.mimeData().hasUrls():
-    #         event.accept()
-    #     else:
-    #         event.ignore()
-
-    #  Le fichier vidéo est "dropé" dans un dossier
-    #  Enregistrement de la vidéo dans la base de données
-    # def dropEvent(self, event):
-    #     if event.mimeData().hasUrls():
-    #         file_paths = [url.toLocalFile() for url in event.mimeData().urls()]
-    #         extension = Path(file_paths[0]).suffix
-    #         if extension == '.mp4':
-    #             #  recherche de l'indice suivant videoFileTab
-    #             query = QSqlQuery()
-    #             btOk = query.exec(f'SELECT MAX(cle) FROM videoFileTab')
-    #             maxCleVideo = 1
-    #             try:
-    #                 if btOk:
-    #                     if query.next():
-    #                         maxCleVideo = query.value(0) + 1
-    #             except:
-    #                 pass
-    #             videoName = os.path.basename(file_paths[0])
-    #             videoPath = os.path.dirname(file_paths[0] + '/' + videoName)
-    #
-    #             #  Enregistrement de la vidéo dans la base de données
-    #             dateCreation = QDate.currentDate()
-    #             dateCreationString = dateCreation.toString('yyyy-MM-dd')
-    #             dateLastView = dateCreationString
-    #             favori = False
-    #             #  Duration
-    #             v = cv2.VideoCapture(videoPath)
-    #             fps = v.get(cv2.CAP_PROP_FPS)
-    #             frameCount = int(v.get((cv2.CAP_PROP_FRAME_COUNT)))
-    #             duration = int(frameCount / fps)
-    #             statut = 0
-    #             tplChamps = ('videoName', 'videoFullPath', 'cleClasseur', 'dateLastView', 'statut', 'favori',
-    #                          'deleted', 'cle', 'dateCreation', 'duration', 'marquePage')
-    #             tplData = (videoName, videoPath, self.node.cle, dateLastView, statut, favori, False, maxCleVideo,
-    #                        dateCreationString, duration, 0)
-    #             query = QSqlQuery()
-    #             query.exec(f'INSERT INTO videoFileTab {tplChamps} VALUES {tplData}')
-    #
-    #             self.evt_btnSelect_clicked()
 
     def createSousDossier(self, cleCreate):
         dialogDossier = DialogDossier(self, modif=False, cleCreate=cleCreate, contenant=self.contenant)
@@ -3207,7 +3170,6 @@ class DraggableWidget1(QLabel):
                               'QLabel::hover {background-color: #444}')
 
         if self.selectVert:
-
             self.selectVert = False
             self.setStyleSheet('QLabel {background-color: transparent; border: 0px; color: gray} '
                                'QLabel::hover {background-color: #444}')
@@ -3235,6 +3197,7 @@ class DraggableWidget1(QLabel):
         file, b = QFileDialog.getOpenFileName(self, 'Enregistrer une nouvelle vidéo', script_dir, '*.mp4')
         if file == '':
             return
+
         videoName = os.path.basename(file)
         videoPath = os.path.dirname(file)
         #  Enregistrement de la vidéo dans la base de données
@@ -3245,6 +3208,17 @@ class DraggableWidget1(QLabel):
         #  Duration
         v = cv2.VideoCapture(file)
         fps = v.get(cv2.CAP_PROP_FPS)
+        if fps == 0:
+            self.dialog = DialogCustom()
+            aux = 'Vidéo corrompue.'
+            self.dialog.setMessage(aux)
+            self.dialog.setPosition(100, 100)
+            self.dialog.setBouton1(self._trad('Fermer', self.lngCourGlobal), False)
+            self.dialog.setBouton2(self._trad('Fermer', self.lngCourGlobal), True)
+            self.dialog.setSaisie('', False)
+            if self.dialog.exec_() == DialogCustom.Accepted:
+                return
+
         frameCount = int(v.get((cv2.CAP_PROP_FRAME_COUNT)))
         duration = int(frameCount / fps)
         statut = 0
@@ -3301,9 +3275,10 @@ class DraggableWidget1(QLabel):
         dirPathRacine = dirRacine[:lenDir]
         dirFullRacine = dirPathRacine + dirNameRacine
         #
+        listTupleNamePath = []
         listTupleNamePath = [(dirNameRacine, dirPathRacine, dirFullRacine)]
-        #
         listDir = []  # Liste des répertoires de l'arborescence à importer avec les index des parents
+
         for root, dirs, files in os.walk(directory):
             for dir in dirs:
                 pathDir = root
@@ -3312,7 +3287,6 @@ class DraggableWidget1(QLabel):
                 fullDir = pathDir + '$' + dir
                 listTupleNamePath.append((dir, pathDir, fullDir))
         listAuxFull = [fullDir for dir, pathDir, fullDir in listTupleNamePath]
-        #  Récupérer les vidéos dans les répertoires importés
         listFile = []
         for root, dirs, files in os.walk(directory):
             for file in files:
@@ -3322,6 +3296,7 @@ class DraggableWidget1(QLabel):
                 indexDir = listAuxFull.index(pathDir) + maxCleNode
                 pathDir = pathDir.replace('$', chr(47))
                 listFile.append((indexDir, file, pathDir))
+
         #  Enregistrer les videos importées dans vidoFileTab
         i = 0
         for itm in listFile:
@@ -3354,6 +3329,8 @@ class DraggableWidget1(QLabel):
         racineImport = True
         increment = 0
 
+        # del listTupleNamePath[0]
+        indexParent = 0
         for itm in listTupleNamePath:
             dirName, dirPath, dirFull = itm
             if racineImport:
@@ -3361,7 +3338,10 @@ class DraggableWidget1(QLabel):
                 racineImport = False
                 listDir.append(nodeAux)
             else:
-                indexParent = listAuxFull.index(dirPath)
+                try:
+                    indexParent = listAuxFull.index(dirPath)
+                except:
+                    pass
                 nodeAux = TreeNode(node_id=maxCleNode + increment, parent_id=maxCleNode + indexParent,
                                    data=dirName, boolDev=True)
                 listDir.append(nodeAux)
@@ -3420,7 +3400,7 @@ class DraggableWidget(QLabel):
         self.node = node
         self.selectVert = False
         self.listSupprDossier = []
-        self.cleDrag = 0
+        # self.cleDrag = 0
 
         #  Initialisation de la langue
         query = QSqlQuery()
@@ -3503,7 +3483,7 @@ class DraggableWidget(QLabel):
                     self.contenant.cleDrag = cleDrag
 
         if event.type() == QEvent.Enter:
-            self.cleCreate = object.node.cle
+            self.cleCreate = self.node.cle
         if event.type() == QEvent.Leave:
             pass
         if event.type() == QEvent.Drop:
