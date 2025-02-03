@@ -1,0 +1,33 @@
+QLineEdit {
+  background-color: #19232D;
+  padding-top: 2px;
+  /* This QLineEdit fix  103, 111 */
+  padding-bottom: 2px;
+  /* This QLineEdit fix  103, 111 */
+  padding-left: 4px;
+  padding-right: 4px;
+  border-style: solid;
+  border: 1px solid #455364;
+  border-radius: 4px;
+  color: #E0E1E3;
+}
+
+QLineEdit:disabled {
+  background-color: #19232D;
+  color: #9DA9B5;
+}
+
+QLineEdit:hover {
+  border: 1px solid #346792;
+  color: #E0E1E3;
+}
+
+QLineEdit:focus {
+  border: 1px solid #1A72BB;
+}
+
+QLineEdit:selected {
+  background-color: #346792;
+  color: #455364;
+}
+

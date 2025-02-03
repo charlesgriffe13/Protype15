@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>881</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="lytMain">
+      <item>
+       <layout class="QHBoxLayout" name="lytTitre">
+        <item>
+         <widget class="QLabel" name="lblTitre">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+</string>
+          </property>
+          <property name="text">
+           <string>DERNIERES VUES</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cmbStatut">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lneRecherche">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="placeholderText">
+           <string>Recherche ...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnLoupe">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="lytCentral">
+        <item>
+         <layout class="QVBoxLayout" name="lytListe">
+          <item>
+           <widget class="QListWidget" name="lstVue">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="lytGrille"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>881</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionQuitter"/>
+   </widget>
+   <widget class="QMenu" name="menuGestion_database">
+    <property name="title">
+     <string>Saisie Vidéo</string>
+    </property>
+    <addaction name="actionEditerVideo"/>
+    <addaction name="actionEnregistrerVideo"/>
+    <addaction name="separator"/>
+    <addaction name="actionGestionTags"/>
+    <addaction name="actionGestionClasseurs"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuConsultation">
+    <property name="title">
+     <string>Consultation</string>
+    </property>
+    <addaction name="actionTableau_de_bord_5"/>
+   </widget>
+   <addaction name="menuFichier"/>
+   <addaction name="menuGestion_database"/>
+   <addaction name="menuConsultation"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionQuitter">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionEditerVideo">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/listVideo.png</normaloff>Ressources/listVideo.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="actionEnregistrerVideo">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/addVideo.png</normaloff>Ressources/addVideo.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="actionGestionTags">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/gestionTags.png</normaloff>Ressources/gestionTags.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="actionGestionClasseurs">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/classeurs.png</normaloff>Ressources/classeurs.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="actionTableau_de_bord">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/dashBoard.png</normaloff>Ressources/dashBoard.png</iconset>
+   </property>
+   <property name="text">
+    <string>Tableau de bord</string>
+   </property>
+  </action>
+  <action name="actionTableau_de_bord_2">
+   <property name="text">
+    <string>Tableau de bord</string>
+   </property>
+  </action>
+  <action name="actionTableau_de_bord_3">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/dashBoard.png</normaloff>Ressources/dashBoard.png</iconset>
+   </property>
+   <property name="text">
+    <string>Tableau de bord</string>
+   </property>
+  </action>
+  <action name="actionTableau_de_bord_4">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/dashBoard.png</normaloff>Ressources/dashBoard.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="actionTableau_de_bord_5">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/dashBoard.png</normaloff>Ressources/dashBoard.png</iconset>
+   </property>
+   <property name="text">
+    <string>Tableau de bord</string>
+   </property>
+  </action>
+  <action name="actionParagraph">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/paragraph.png</normaloff>Ressources/paragraph.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+  <action name="actionPlayer_vid_o">
+   <property name="icon">
+    <iconset>
+     <normaloff>Ressources/screenVideo.png</normaloff>Ressources/screenVideo.png</iconset>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

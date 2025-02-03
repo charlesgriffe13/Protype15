@@ -1,0 +1,154 @@
+QMenuBar {/* Position de base*/
+  position: absolute;
+  background-color: #292929;
+  padding: 15px;
+  border: 1px solid #19232D;
+  color: #E0E1E3;
+  selection-background-color: #1A72BB;
+}
+
+/*QMenuBar:focus {
+  border: 1px solid #346792;
+}*/
+
+QMenuBar::item {
+  background: transparent;
+  padding-right: 30px;
+}
+
+QMenuBar::item:selected {
+  padding: 0px;
+  background: transparent;
+  border: 0px solid #455364;
+  /*background-color: #000000;*/
+}
+
+QMenuBar::item:pressed {
+  padding: 0px;
+  border: 0px solid #455364;
+  background-color: #000000;
+  color: #E0E1E3;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+/*QMenu {
+  border: 0px solid #455364;
+  color: #E0E1E3;
+  margin: 0px;
+  background-color: #37414F;
+  selection-background-color: #1A72BB;*/
+}
+
+QMenu::separator {
+  height: 1px;
+  background-color: #60798B;
+  color: #E0E1E3;
+}
+
+/*QMenu::item {
+  background-color: #37414F;
+  padding: 4px 24px 4px 28px;
+  /* Reserve space for selection border */
+  border: 1px transparent #455364;
+}*/
+
+QMenu::item:selected {
+  color: #000000;
+  background-color: #F05A24;
+}
+
+/*QMenu::item:pressed {
+  background-color: #1A72BB;
+}*/
+
+QMenu::icon {
+  padding-left: 10px;
+  width: 14px;
+  height: 14px;
+}
+
+QMenu::indicator {
+  padding-left: 8px;
+  width: 12px;
+  height: 12px;
+  /* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+  /* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
+}
+
+QMenu::indicator:non-exclusive:unchecked {
+  image: url(":/qss_icons/dark/rc/checkbox_unchecked.png");
+}
+
+QMenu::indicator:non-exclusive:unchecked:hover, QMenu::indicator:non-exclusive:unchecked:focus, QMenu::indicator:non-exclusive:unchecked:pressed {
+  border: none;
+  image: url(":/qss_icons/dark/rc/checkbox_unchecked_focus.png");
+}
+
+QMenu::indicator:non-exclusive:unchecked:disabled {
+  image: url(":/qss_icons/dark/rc/checkbox_unchecked_disabled.png");
+}
+
+QMenu::indicator:non-exclusive:checked {
+  image: url(":/qss_icons/dark/rc/checkbox_checked.png");
+}
+
+QMenu::indicator:non-exclusive:checked:hover, QMenu::indicator:non-exclusive:checked:focus, QMenu::indicator:non-exclusive:checked:pressed {
+  border: none;
+  image: url(":/qss_icons/dark/rc/checkbox_checked_focus.png");
+}
+
+QMenu::indicator:non-exclusive:checked:disabled {
+  image: url(":/qss_icons/dark/rc/checkbox_checked_disabled.png");
+}
+
+QMenu::indicator:non-exclusive:indeterminate {
+  image: url(":/qss_icons/dark/rc/checkbox_indeterminate.png");
+}
+
+QMenu::indicator:non-exclusive:indeterminate:disabled {
+  image: url(":/qss_icons/dark/rc/checkbox_indeterminate_disabled.png");
+}
+
+QMenu::indicator:non-exclusive:indeterminate:focus, QMenu::indicator:non-exclusive:indeterminate:hover, QMenu::indicator:non-exclusive:indeterminate:pressed {
+  image: url(":/qss_icons/dark/rc/checkbox_indeterminate_focus.png");
+}
+
+QMenu::indicator:exclusive:unchecked {
+  image: url(":/qss_icons/dark/rc/radio_unchecked.png");
+}
+
+QMenu::indicator:exclusive:unchecked:hover, QMenu::indicator:exclusive:unchecked:focus, QMenu::indicator:exclusive:unchecked:pressed {
+  border: none;
+  outline: none;
+  image: url(":/qss_icons/dark/rc/radio_unchecked_focus.png");
+}
+
+QMenu::indicator:exclusive:unchecked:disabled {
+  image: url(":/qss_icons/dark/rc/radio_unchecked_disabled.png");
+}
+
+QMenu::indicator:exclusive:checked {
+  border: none;
+  outline: none;
+  image: url(":/qss_icons/dark/rc/radio_checked.png");
+}
+
+QMenu::indicator:exclusive:checked:hover, QMenu::indicator:exclusive:checked:focus, QMenu::indicator:exclusive:checked:pressed {
+  border: none;
+  outline: none;
+  image: url(":/qss_icons/dark/rc/radio_checked_focus.png");
+}
+
+QMenu::indicator:exclusive:checked:disabled {
+  outline: none;
+  image: url(":/qss_icons/dark/rc/radio_checked_disabled.png");
+}
+
+QMenu::right-arrow {
+  margin: 5px;
+  padding-left: 12px;
+  image: url(":/qss_icons/dark/rc/arrow_right.png");
+  height: 12px;
+  width: 12px;
+}
+

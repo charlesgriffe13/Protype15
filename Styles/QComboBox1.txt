@@ -1,0 +1,12 @@
+QComboBox {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop: 0 #444444, stop: 1 #333333);
+                border: 0px solid gray;
+                border-radius: 5px;
+                padding: 1px 18px 1px 3px;
+                min-width: 6em;
+		width : 220;
+		height: 28;
+		color: white;
+		font-size: 15px; 
+            }

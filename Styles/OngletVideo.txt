@@ -1,0 +1,2 @@
+QTabBar::tab{width: 125; height: 32; padding-right: 0px;}
+

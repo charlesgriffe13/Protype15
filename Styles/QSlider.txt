@@ -1,0 +1,84 @@
+QSlider:disabled {
+  background: #19232D;
+}
+
+QSlider:focus {
+  border: none;
+}
+
+QSlider::groove:horizontal {
+  background: #455364;
+  border: 1px solid #455364;
+  height: 4px;
+  margin: 0px;
+  border-radius: 4px;
+}
+
+QSlider::groove:vertical {
+  background: #455364;
+  border: 1px solid #455364;
+  width: 4px;
+  margin: 0px;
+  border-radius: 4px;
+}
+
+QSlider::add-page:vertical {
+  background: #346792;
+  border: 1px solid #455364;
+  width: 4px;
+  margin: 0px;
+  border-radius: 4px;
+}
+
+QSlider::add-page:vertical :disabled {
+  background: #26486B;
+}
+
+QSlider::sub-page:horizontal {
+  background: #346792;
+  border: 1px solid #455364;
+  height: 4px;
+  margin: 0px;
+  border-radius: 4px;
+}
+
+QSlider::sub-page:horizontal:disabled {
+  background: #26486B;
+}
+
+QSlider::handle:horizontal {
+  background: #9DA9B5;
+  border: 1px solid #455364;
+  width: 8px;
+  height: 8px;
+  margin: -8px 0px;
+  border-radius: 4px;
+}
+
+QSlider::handle:horizontal:hover {
+  background: #346792;
+  border: 1px solid #346792;
+}
+
+QSlider::handle:horizontal:focus {
+  border: 1px solid #1A72BB;
+}
+
+QSlider::handle:vertical {
+  background: #9DA9B5;
+  border: 1px solid #455364;
+  width: 8px;
+  height: 8px;
+  margin: 0 -8px;
+  border-radius: 4px;
+}
+
+QSlider::handle:vertical:hover {
+  background: #346792;
+  border: 1px solid #346792;
+}
+
+QSlider::handle:vertical:focus {
+  border: 1px solid #1A72BB;
+}
+

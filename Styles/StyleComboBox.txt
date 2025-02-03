@@ -1,0 +1,31 @@
+QComboBox {
+  color: #a6a8ab; 
+  background-image: url("FondComboBox.png"); 
+  /*color: orange;*/
+  /*background-color: #222222;*/
+  /*border: 1px solid #455364;
+  border-radius: 4px;*/
+  /*selection-background-color: #346792;*/
+  /*padding-left: 4px;*/
+  /*padding-right: 4px;*/
+  font-family: "arial", sans-serif;
+  font-size: 16px;
+  /* padding-right = 36; 4 + 16*2 See scrollbar size */
+  /* changed to 4px to fix #239 */
+  /* Fixes #103, #111 */
+  /*min-height: 1.5em;*/
+  /* padding-top: 2px;     removed to fix #132 */
+  /* padding-bottom: 2px;  removed to fix #132 */
+  /* min-width: 75px;      removed to fix #109 */
+  /* Needed to remove indicator - fix #132 */
+}
+/*self.setStyleSheet('QComboBox { background-image: url("chemin_vers_image.jpg"); 
+background-repeat: no-repeat; background-position: center; padding-left: 20px; }')
+
+QComboBox QAbstractItemView {
+  border: 0px solid #455364;
+  border-radius: 0;
+  background-color: #19232D;
+  color: #a6a8ab;
+  selection-background-color: #346792;
+}*/
