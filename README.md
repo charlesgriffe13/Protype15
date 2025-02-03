@@ -1,6 +1,6 @@
 #  VIDEO FINDER - ReadMe.md
 
-![](Ressources\carte_euristique.png)
+![](Ressources/carte_euristique.png)
 
 ##  Introduction
 
@@ -12,7 +12,7 @@ De ce fait, on peut rechercher une information soit en parcourant la vidéo ou e
 
 
 
-![](Ressources\EcranAccueil.png)
+![](Ressources/EcranAccueil.png)
 <p align="center">Ecran d'accueil de VideoFinder.</p>
 
 ##  I - Stockage des vidéos :
@@ -21,7 +21,7 @@ Une vidéothèque, par définition, est un ensemble organisé et répertorié de
 
 VideoFinder dispose d’un système de dossiers hiérarchique qui permettent de créer une organisation arborescente indépendante de la position physique des vidéos dans la FAT (file allocation table).
 
-![](Ressources\arbre.png)
+![](Ressources/arbre.png)
 <p align="center">Arborescence des dossiers.</p>Il existe 3 méthodes : l’explorateur de fichiers, glisser déposer de fichiers et importer un extrait de l’arborescence de l’explorateur de fichiers en le greffant dans n’importe quel point de l’arborescence de VideoFinder.
 
 De ce fait, le fait d’ajouter des vidéos et même de les dupliquer n’alourdit pas les ressources dans la mesure où seul le chemin de la vidéo est stocké.
@@ -35,19 +35,19 @@ Tous les dossiers de l’arborescence de VideoFinder disposent d’un menu déro
 
 Il suffit de déplacer à la souris la vidéo concernée et la déposer dans le dossier choisi.
 
-![](Ressources\glisserDeposer1.png)
+![](Ressources/glisserDeposer1.png)
 <p align="center">Glisser déposer d'une vidéo dans un dossier.</p>
 
 ###  Importer un extrait de l’arborescence de l’explorateur de fichiers
 
 Pour cela, il suffit de faire glisser la racine de l’extrait de l’arborescence de l’explorateur de fichiers et de le déposer sur le dossier de l’arborescence de VideoFinder choisi. Les dossiers correspondants sont créés à l’identiques des répertoires importés et les vidéos également.
 
-![](Ressources\importDossier.png)
+![](Ressources/importDossier.png)
 <p align="center">Importation d’un répertoire ainsi que ses sous répertoires</p>
 
 ##  Enrichissement des vidéos (mode édition)
 
-![](Ressources\modeEdition.png)
+![](Ressources/modeEdition.png)
 <p align="center">Présentation des différentes pages du mode édition</p>
 
 Lorsqu’une vidéo est importée, seules les informations basiques sont enregistrées dans la base de données de VideoFinder, à savoir :
@@ -72,7 +72,7 @@ Le module Edition permet d’ajouter d’autres attributs qui faciliteront le cl
 Une fiche de lecture permet d’ajouter un certain nombre d’éléments tels que : chapitres, notes, liens URL externes, captures d’écran et tags spécifiques. Ces éléments sont reliés au fichier vidéo par le time code ce qui permet de naviguer soit directement sur le player ou passer par les chapitres de la fiche de lecture.
 D’autre part, elle permet d’insérer un marque page afin de retrouver l’espace de travail identique à la prochaine utilisation.
 
-![](Ressources\ficheLecture2.png)
+![](Ressources/ficheLecture2.png)
 <p align="center">Mode étude avec le player à gauche et la fiche de lecture à droite.</p>
 
 ##  Contenu de la fiche de lecture
@@ -123,6 +123,6 @@ Les critères concernés par la recherche sont :
 + Label
 + Recherche dans les notes
 
-![](Ressources\rechercheAvancee.png)
+![](Ressources/rechercheAvancee.png)
 <p align="center">Recherche avancée.</p>
 
